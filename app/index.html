@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>EAI FISAT 2026</title>
+<link rel="icon" href="img/icon-180.png">
+<link rel="apple-touch-icon" href="img/icon-180.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,600;0,700;0,800;1,700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+/* VOICE  everyday working tool for conference participants: calm, quick, exact
+   IDEA   the printed conference programme booklet turned into a pocket app: brochure navy band, orange section heads, room badges
+   PICTURE Home: the live Now & Next card on the brochure's deep-blue ribbon band; elsewhere the content itself (hanging-time programme, floor plans)
+   COLOUR navy #0b2d7a ground for header bands, white body, sky #1d9bf0 support, FISAT orange #f26522 accent for "now" and section heads
+   TYPE   Montserrat 700/800 (brochure wordmark) + Inter
+   LAYOUT single app column (max 640px) with bottom tab bar; header band with search; on desktop the column centres on a navy field */
+:root{color-scheme:light dark;--bg:light-dark(#ffffff,#08132e);--ink:light-dark(#0d1b3a,#e9eefb);--mute:light-dark(#52607d,#9fb0d4);--line:light-dark(#dfe5f1,#1f2f57);--card:light-dark(#f3f6fc,#0f1d40);--navy:#0b2d7a;--navy2:#0a1f55;--sky:light-dark(#0f7fd6,#5bb6ff);--org:light-dark(#d9530f,#ff8a4c);--orgbg:light-dark(#fff1e8,#3a1d0c);--field:light-dark(#e9eef8,#050b1d)}
+:root[data-theme=light]{color-scheme:light}:root[data-theme=dark]{color-scheme:dark}
+*{box-sizing:border-box;min-width:0}
+html,body{margin:0;background:var(--field)}
+body{color:var(--ink);font:16px/1.5 Inter,system-ui,sans-serif;overflow-x:clip;-webkit-tap-highlight-color:transparent}
+h1,h2,h3{font-family:Montserrat,Inter,sans-serif;line-height:1.1;letter-spacing:-.01em;margin:0}
+a{color:var(--sky)}
+button{font:inherit;color:inherit}
+.app{max-width:640px;margin:0 auto;min-height:100svh;background:var(--bg);padding-bottom:calc(76px + env(safe-area-inset-bottom,0px));position:relative}
+.top{position:sticky;top:0;z-index:20;background:var(--navy);color:#fff;display:flex;align-items:center;gap:10px;padding:10px max(16px,env(safe-area-inset-left,0px)) 10px 16px;padding-top:calc(10px + env(safe-area-inset-top,0px))}
+.brand{font:italic 800 21px/1 Montserrat,sans-serif;letter-spacing:-.01em;flex:1;color:#fff;text-decoration:none}
+.brand{display:flex;align-items:center;gap:10px}
+.brand img{height:29px;width:auto}
+.partners{display:flex;align-items:center;gap:18px;margin-bottom:18px;position:relative}
+.partners img{height:40px;width:auto;display:block}
+.partners i{width:1px;align-self:stretch;background:rgba(255,255,255,.35)}
+.ib{width:44px;height:44px;border-radius:12px;border:0;background:rgba(255,255,255,.12);display:grid;place-items:center;cursor:pointer;color:#fff}
+.ib:focus-visible,.tab:focus-visible,.chip:focus-visible,.row:focus-visible,.btn:focus-visible{outline:3px solid var(--org);outline-offset:2px}
+.ib svg{width:22px;height:22px}
+.tabs{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:640px;z-index:20;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));background:var(--bg);border-top:1px solid var(--line);padding-bottom:env(safe-area-inset-bottom,0px)}
+.tab{border:0;background:none;padding:8px 2px 9px;display:grid;justify-items:center;gap:2px;font-size:12px;font-weight:600;color:var(--mute);cursor:pointer;min-height:56px;text-decoration:none}
+.tab svg{width:24px;height:24px}
+.tab[aria-current=page]{color:var(--org)}
+.band{background:linear-gradient(160deg,var(--navy) 0%,var(--navy2) 100%);color:#fff;padding:20px 16px 26px;position:relative;overflow:hidden}
+.band h1{font-size:clamp(26px,7vw,34px);font-weight:800;position:relative}
+.band .ht{font-size:clamp(23px,6.2vw,30px);text-wrap:balance}
+.intro{margin-top:18px;border-radius:20px;padding:18px 18px 16px;border:1px solid var(--line);background:linear-gradient(140deg,light-dark(rgba(29,155,240,.10),rgba(29,155,240,.16)) 0%,light-dark(rgba(23,184,144,.07),rgba(23,184,144,.10)) 50%,light-dark(rgba(242,101,34,.11),rgba(242,101,34,.16)) 100%),var(--bg)}
+.ih{display:grid;grid-template-columns:auto minmax(0,1fr);gap:14px;align-items:center}
+.il{width:64px;height:64px;border-radius:16px;background:#fff;display:grid;place-items:center;box-shadow:0 2px 8px rgba(5,20,60,.12)}
+.il img{width:50px;height:auto;display:block}
+.ik{font-size:13px;font-weight:700;color:var(--org)}
+.intro h2{font-size:20px;font-weight:700;text-wrap:balance}
+.ih .ik{margin-top:3px}
+.intro p{margin:14px 0 0;line-height:1.6}
+.intro .lead{font-size:17px;font-weight:500}
+.ipub{display:flex;gap:10px;align-items:flex-start;margin-top:14px;padding-top:12px;border-top:1px solid color-mix(in srgb,var(--ink) 12%,transparent);font-size:15px;color:var(--mute)}
+.ipub svg{flex:none;margin-top:2px;color:var(--sky)}
+.ipub b{color:var(--ink);font-weight:600}
+.band p{margin:6px 0 0;color:#cfe0ff;position:relative}
+.ribbon{position:absolute;right:-60px;top:-40px;width:260px;height:260px;opacity:.35;pointer-events:none}
+main{padding:0 16px 24px}
+.sec{margin-top:26px}
+.sec>h2{font-size:20px;color:var(--org);margin-bottom:10px;font-weight:700}
+.muted{color:var(--mute)}
+.small{font-size:14px}
+.now{background:var(--bg);color:var(--ink);border-radius:18px;margin:-14px 0 0;position:relative;box-shadow:0 1px 0 var(--line),0 8px 24px rgba(5,20,60,.18);padding:16px;border:1px solid var(--line)}
+.now .lbl{font-weight:700;font-size:13px;color:var(--org);display:flex;align-items:center;gap:6px}
+.dot{width:9px;height:9px;border-radius:50%;background:var(--org)}
+.live .dot{animation:pulse 1.6s infinite}
+@keyframes pulse{50%{opacity:.25}}
+@media(prefers-reduced-motion:reduce){.live .dot,.pin{animation:none!important}}
+.now h3{font-size:19px;margin:6px 0 2px}
+.now .nx{border-top:1px solid var(--line);margin-top:12px;padding-top:10px}
+.quick{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-top:16px}
+.qk{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px 10px;text-decoration:none;color:var(--ink);font-weight:600;font-size:14px;display:grid;gap:6px;min-height:76px}
+.qk svg{width:24px;height:24px;color:var(--sky)}
+.find{display:flex;gap:8px;margin-top:8px}
+input[type=search],input[type=text]{font:16px Inter,sans-serif;width:100%;padding:11px 12px;border-radius:12px;border:1.5px solid var(--line);background:var(--bg);color:var(--ink);min-height:46px}
+input:focus{outline:none;border-color:var(--sky)}
+.btn{border:0;border-radius:12px;background:var(--org);color:#fff;font-weight:700;padding:0 16px;min-height:46px;cursor:pointer;white-space:nowrap;text-decoration:none;display:inline-flex;align-items:center}
+.btn.ghost{background:var(--card);color:var(--ink);border:1px solid var(--line)}
+.prog{list-style:none;margin:0;padding:0}
+.prog li{display:grid;grid-template-columns:4.4em minmax(0,1fr);gap:12px;padding:12px 0;border-bottom:1px solid var(--line)}
+.prog .tm{font:700 17px/1.2 Montserrat,sans-serif;white-space:nowrap;font-variant-numeric:tabular-nums}
+.prog .tm small{display:block;font:500 13px Inter,sans-serif;color:var(--mute)}
+.prog .ti{font-weight:600}
+.prog li.is-now{background:var(--orgbg);margin:0 -16px;padding:12px 16px;border-bottom-color:transparent}
+.prog li.is-now .tm{color:var(--org)}
+.prog li.k-break .ti,.prog li.k-logistics .ti{color:var(--mute)}
+.tag{text-decoration:none;display:inline-block;font-size:12px;font-weight:700;border-radius:999px;padding:2px 9px;background:var(--card);border:1px solid var(--line);color:var(--mute);white-space:nowrap;margin-right:4px}
+.tag.k{background:var(--orgbg);border-color:transparent;color:var(--org)}
+.tag.late{background:var(--orgbg);color:var(--org);border-color:transparent}
+.room{display:inline-flex;align-items:center;gap:4px;font:700 13px Inter,sans-serif;background:var(--navy);color:#fff;border-radius:8px;padding:3px 8px;white-space:nowrap;text-decoration:none}
+.seg{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));background:var(--card);border-radius:12px;padding:4px;gap:4px;margin-top:14px;border:1px solid var(--line)}
+.seg button{border:0;background:none;border-radius:9px;min-height:40px;font-weight:600;font-size:14px;cursor:pointer;color:var(--mute)}
+.seg button[aria-pressed=true]{background:linear-gradient(135deg,#2f7bff,#0b3fbf);color:#fff;box-shadow:0 3px 10px rgba(23,82,220,.4)}
+.seg button{transition:background-color .15s}
+.chips{display:flex;gap:8px;overflow-x:auto;padding:12px 0 4px;scrollbar-width:none}
+.chip{flex:none;border:1px solid var(--line);background:var(--bg);border-radius:999px;padding:0 14px;min-height:38px;font-size:14px;font-weight:600;cursor:pointer;color:var(--ink)}
+.chip[aria-pressed=true]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.sel{display:grid;grid-template-columns:auto minmax(0,1fr);align-items:center;gap:12px;margin-top:12px}
+.sel span{font-size:14px;font-weight:600;color:var(--mute)}
+.sel select{appearance:none;-webkit-appearance:none;font:600 16px Inter,sans-serif;color:var(--ink);background:var(--bg) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='9' viewBox='0 0 14 9'%3E%3Cpath d='M1 1l6 6 6-6' fill='none' stroke='%23f26522' stroke-width='2.2' stroke-linecap='round'/%3E%3C/svg%3E") no-repeat right 14px center;border:1.5px solid var(--line);border-radius:12px;min-height:46px;padding:0 40px 0 14px;width:100%;cursor:pointer}
+.sel select:focus-visible{outline:3px solid var(--org);outline-offset:2px}
+.tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px}
+.tg{border:1.5px solid var(--line);background:var(--bg);color:var(--ink);border-radius:999px;min-height:36px;padding:0 10px 0 12px;font-size:13.5px;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;gap:7px}
+.tg span{font-size:12px;font-weight:700;color:var(--mute);background:var(--card);border-radius:999px;min-width:20px;padding:0 5px;text-align:center}
+.tg[aria-pressed=true]{background:#d9530f;border-color:#d9530f;color:#fff}
+.tg[aria-pressed=true] span{background:rgba(255,255,255,.25);color:#fff}
+.tg:focus-visible{outline:3px solid var(--sky);outline-offset:2px}
+.list{display:grid;gap:10px;margin-top:10px}
+.row{display:grid;grid-template-columns:3.4em minmax(0,1fr) 44px;gap:10px;align-items:start;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px 6px 12px 12px;text-decoration:none;color:var(--ink);cursor:pointer}
+.row:has(.star[aria-pressed=true]){background:light-dark(#fff6d8,#3d2b0e);border-color:light-dark(#f3dc8f,#8a5f17)}
+.papers li:has(.star[aria-pressed=true]){background:light-dark(#fff6d8,#3d2b0e);margin:0 -16px;padding:14px 16px;border-bottom-color:light-dark(#f3dc8f,#8a5f17)}
+.row,.papers li{transition:background-color .2s}
+.row .id{font:800 16px/1.2 Montserrat,sans-serif;color:var(--sky);padding-top:1px}
+.row .t{font-weight:600;line-height:1.3}
+.row .m{font-size:14px;color:var(--mute);margin-top:6px;display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.star{width:44px;height:44px;border:0;background:none;display:grid;place-items:center;cursor:pointer;color:var(--mute);margin-top:-8px}
+.star svg{width:22px;height:22px}
+.star[aria-pressed=true]{color:var(--org)}
+.star[aria-pressed=true] path{fill:currentColor}
+.back{display:inline-flex;align-items:center;gap:4px;color:#cfe0ff;text-decoration:none;font-weight:600;font-size:14px;min-height:36px;position:relative}
+.meta{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px;position:relative}
+.meta .room{background:#fff;color:var(--navy)}
+.pill{background:rgba(255,255,255,.14);color:#fff;border-radius:8px;padding:3px 9px;font-size:13px;font-weight:600;white-space:nowrap}
+.chairs{margin-top:14px;font-size:14px;color:#dbe7ff;position:relative}
+.chairs b{color:#fff}
+.papers{list-style:none;margin:0;padding:0}
+.papers li{display:grid;grid-template-columns:2em minmax(0,1fr) 44px;gap:8px;padding:14px 0;border-bottom:1px solid var(--line)}
+.papers .n{font:800 20px/1 Montserrat,sans-serif;color:var(--org);padding-top:2px}
+.papers .pt{font-weight:600;line-height:1.35}
+.papers .pa{font-size:14px;color:var(--mute);margin-top:4px}
+.papers .pid{font-size:13px;font-weight:700;color:var(--sky);font-variant-numeric:tabular-nums}
+.papers li.hit{background:var(--orgbg);margin:0 -16px;padding:14px 16px}
+.spk{display:grid;grid-template-columns:72px minmax(0,1fr);gap:14px;align-items:center;padding:14px 0;border-bottom:1px solid var(--line);text-decoration:none;color:var(--ink)}
+.av{width:72px;height:72px;border-radius:18px;object-fit:cover;background:var(--card);display:grid;place-items:center;font:800 22px Montserrat,sans-serif;color:var(--sky)}
+.spk .r{font-size:13px;font-weight:700;color:var(--org)}
+.spk .nm{font-weight:700;font-family:Montserrat,sans-serif;line-height:1.2}
+.spk .tk{font-size:14px;color:var(--mute);margin-top:2px}
+.hero-sp{display:grid;grid-template-columns:96px minmax(0,1fr);gap:16px;align-items:center;position:relative;margin-top:8px}
+.hero-sp .av{width:96px;height:96px;border-radius:22px}
+.talk{font:700 19px/1.25 Montserrat,sans-serif;margin:16px 0 4px}
+.prose p{margin:0 0 12px}
+.floors{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px;margin-top:14px}
+.mapscroll{overflow-x:auto;margin-top:12px;border-radius:14px;border:1px solid var(--line);background:#fff;scroll-behavior:smooth}
+.mapbox{position:relative;width:max(100%,780px)}
+.mapbox img{display:block;width:100%;height:auto}
+.pin{position:absolute;width:52px;height:52px;margin:-26px 0 0 -26px;border-radius:50%;border:5px solid #f26522;background:rgba(242,101,34,.12);box-shadow:0 0 0 3px #fff,0 4px 10px rgba(0,0,0,.3);animation:pinp 1.4s ease-in-out infinite;pointer-events:none}
+@keyframes pinp{50%{box-shadow:0 0 0 3px #fff,0 0 0 12px rgba(242,101,34,.3)}}
+.roomgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(64px,1fr));gap:6px;margin-top:10px}
+.roomgrid .chip{padding:0;text-align:center}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px}
+.kv{display:grid;grid-template-columns:7.5em minmax(0,1fr);gap:4px 12px;font-size:15px}
+.kv dt{color:var(--mute)}
+.kv dd{margin:0;font-weight:500}
+details{border-bottom:1px solid var(--line)}
+summary{cursor:pointer;padding:14px 0;font:700 17px Montserrat,sans-serif;list-style:none;display:flex;justify-content:space-between;gap:10px}
+summary::after{content:"+";color:var(--org);font-size:22px;line-height:1}
+details[open] summary::after{content:"–"}
+details>div{padding:0 0 14px}
+.ppl{display:grid;gap:8px}
+.ppl div b{display:block;font-weight:600}
+.ppl div span{font-size:14px;color:var(--mute)}
+.place{padding:10px 0;border-top:1px solid var(--line)}
+.place:first-child{border-top:0}
+.place b{font-family:Montserrat,sans-serif}
+.place p{margin:3px 0 0;font-size:15px;color:var(--mute)}
+.route{list-style:none;padding:0;margin:8px 0 0;counter-reset:r}
+.route li{counter-increment:r;display:flex;gap:10px;align-items:center;padding:6px 0;font-weight:600}
+.route li::before{content:counter(r);width:28px;height:28px;border-radius:50%;background:var(--sky);color:#fff;display:grid;place-items:center;font-size:14px;flex:none}
+.empty{padding:28px 8px;text-align:center;color:var(--mute)}
+.res-h{font:700 14px Inter,sans-serif;color:var(--mute);margin:18px 0 6px}
+mark{background:light-dark(#ffe1cc,#5a2a0e);color:inherit;border-radius:3px;padding:0 1px}
+.note{font-size:14px;color:var(--mute);margin-top:10px}
+.about{display:grid;grid-template-columns:auto minmax(0,1fr);gap:16px;align-items:center}
+.about .logo{background:#fff;border-radius:16px;padding:10px 12px;border:1px solid var(--line)}
+.about .logo img{display:block;width:104px;height:auto}
+.org{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:14px}
+.org div{border-radius:14px;height:84px;display:grid;place-items:center;padding:12px 16px;border:1px solid var(--line)}
+.org img{max-width:100%;max-height:54px;width:auto;height:auto;display:block}
+.org .w{background:#fff}
+.org .n{background:var(--navy);border-color:var(--navy)}
+.venue{width:100%;border-radius:14px;display:block;margin-top:12px}
+@media(min-width:700px){.app{box-shadow:0 0 0 1px var(--line)}}
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="top">
+    <a class="brand" href="#home"><img src="img/logo-fisat.png" alt="" width="40" height="29">FISAT 2026</a>
+    <button class="ib" id="btnSearch" aria-label="Search papers, authors, rooms">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+    </button>
+  </header>
+  <div id="view"></div>
+  <nav class="tabs" aria-label="Sections">
+    <a class="tab" href="#home" data-t="home"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M4 10.5 12 4l8 6.5V20h-5v-6H9v6H4z"/></svg>Home</a>
+    <a class="tab" href="#program" data-t="program"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="8.5"/><path d="M12 7v5l3.5 2"/></svg>Program</a>
+    <a class="tab" href="#sessions" data-t="sessions"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="4" y="4" width="16" height="16" rx="3"/><path d="M8 9h8M8 13h8M8 17h5"/></svg>Sessions</a>
+    <a class="tab" href="#map" data-t="map"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M12 21s-6.5-6-6.5-11a6.5 6.5 0 0 1 13 0c0 5-6.5 11-6.5 11z"/><circle cx="12" cy="10" r="2.4"/></svg>Map</a>
+    <a class="tab" href="#info" data-t="info"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="8.5"/><path d="M12 11v5.5M12 7.6v.2"/></svg>Info</a>
+  </nav>
+</div>
+<script src="sessions.js"></script>
+<script src="content.js"></script>
+<script>
+{
+const S = window.SESSIONS || [], C = window.CONTENT || {};
+const $ = (q, r = document) => r.querySelector(q);
+const esc = v => String(v ?? "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+const ICON = {
+  star: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="m12 3.5 2.6 5.4 5.9.8-4.3 4.1 1 5.8L12 16.8l-5.2 2.8 1-5.8-4.3-4.1 5.9-.8z"/></svg>',
+  back: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M15 5l-7 7 7 7"/></svg>',
+  pin: '<svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M12 22s-7-6.4-7-12a7 7 0 0 1 14 0c0 5.6-7 12-7 12zm0-9.5a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5z"/></svg>'
+};
+const ribbon = '<svg class="ribbon" viewBox="0 0 200 200" aria-hidden="true"><defs><linearGradient id="rg" x1="0" x2="1"><stop offset="0" stop-color="#3fd0ff"/><stop offset="1" stop-color="#2a5bff"/></linearGradient></defs>' +
+  Array.from({ length: 9 }, (_, i) => `<ellipse cx="100" cy="100" rx="${84 - i * 4}" ry="${44 - i * 2}" transform="rotate(${-35 + i * 6} 100 100)" fill="none" stroke="url(#rg)" stroke-width="2.2" opacity="${0.9 - i * 0.07}"/>`).join("") + "</svg>";
+
+/* ---------- storage (My Schedule) ---------- */
+let saved = new Set();
+try { saved = new Set(JSON.parse(localStorage.getItem("fisat-saved") || "[]")); } catch (e) {}
+const persist = () => { try { localStorage.setItem("fisat-saved", JSON.stringify([...saved])); } catch (e) {} };
+const starBtn = (key, label) => `<button class="star" data-star="${esc(key)}" aria-pressed="${saved.has(key)}" aria-label="Save ${esc(label)} to My Schedule">${ICON.star}</button>`;
+
+/* ---------- time (Asia/Saigon) ---------- */
+const DAY = "2026-11-26";
+const toMin = t => { const [h, m] = t.split(":").map(Number); return h * 60 + m; };
+function saigonNow() {
+  const p = Object.fromEntries(new Intl.DateTimeFormat("en-CA", { timeZone: "Asia/Saigon", year: "numeric", month: "2-digit", day: "2-digit", hour: "2-digit", minute: "2-digit", hourCycle: "h23" }).formatToParts(new Date()).map(x => [x.type, x.value]));
+  return { date: `${p.year}-${p.month}-${p.day}`, min: +p.hour * 60 + +p.minute };
+}
+function nowState() {
+  const n = saigonNow(), P = C.program;
+  if (n.date < DAY) return { phase: "before", eve: n.date === "2026-11-25", next: P[0] };
+  if (n.date > DAY) return { phase: "after" };
+  const cur = P.filter(e => toMin(e.s) <= n.min && n.min < toMin(e.e));
+  const next = P.find(e => toMin(e.s) > n.min);
+  if (!cur.length && !next) return { phase: "after" };
+  return { phase: "day", cur, next, min: n.min };
+}
+
+/* ---------- helpers ---------- */
+const sById = id => S.find(s => s.id.toLowerCase() === String(id).toLowerCase());
+const topicOf = s => (C.topics || []).find(t => t.ss.includes(+s.id.slice(2)));
+const chairName = c => c.split(",")[0].trim();
+const timeLabel = s => s.time.replace("-", "–");
+const roomLink = (r, cls = "room") => `<a class="${cls}" href="#map-${esc(r.replace(/\s/g, "").toLowerCase())}">${ICON.pin}${esc(/^\d/.test(r) ? "Room " + r : r)}</a>`;
+const progItem = e => e.sp ? "#speaker-" + e.sp : e.block ? "#sessions-b" + e.block : e.room ? "#map-" + e.room.toLowerCase() : "#program";
+
+function sessionRow(s, extra = "") {
+  return `<div class="row" role="link" tabindex="0" data-go="#session-${s.id.toLowerCase()}">
+    <div class="id">${esc(s.id)}</div>
+    <div><div class="t">${esc(s.title)}</div>
+      <div class="m"><span class="room">${ICON.pin}${esc(s.room)}</span><span>${esc(timeLabel(s))}</span><span>· ${s.papers.length} papers</span></div>
+      <div class="m">Chair: ${esc(s.chairs.map(chairName).join(", ") || "TBA")}</div>${extra}</div>
+    ${starBtn(s.id, s.id)}</div>`;
+}
+
+/* ---------- views ---------- */
+function vHome() {
+  const st = nowState();
+  let card;
+  if (st.phase === "before") {
+    card = `<div class="now"><div class="lbl"><span class="dot"></span>Main day · Thu 26 November</div>
+      <h3>07:30 Registration opens</h3>
+      <div class="muted small">Lobby Area, ground floor · Opening at 08:45 in Hall A</div></div>`;
+  } else if (st.phase === "after") {
+    card = `<div class="now"><div class="lbl"><span class="dot"></span>That's a wrap</div><h3>Thank you for joining EAI FISAT 2026</h3><div class="muted small">Proceedings: EAI/Springer Innovations in Communication and Computing.</div></div>`;
+  } else {
+    const cur = st.cur.map(e => `<a href="${progItem(e)}" style="color:inherit;text-decoration:none"><h3>${esc(e.t)}</h3></a><div class="muted small">${esc(e.s)}–${esc(e.e)} · ${esc(e.v)}${e.who ? " · " + esc(e.who) : ""}</div>`).join("");
+    card = `<div class="now live">${cur ? `<div class="lbl"><span class="dot"></span>Happening now</div>${cur}` : ""}
+      ${st.next ? `<div class="${cur ? "nx" : ""}"><div class="lbl" style="color:var(--mute)">Next · ${esc(st.next.s)}${st.next ? " (in " + (toMin(st.next.s) - st.min) + " min)" : ""}</div><a href="${progItem(st.next)}" style="color:inherit;text-decoration:none"><h3>${esc(st.next.t)}</h3></a><div class="muted small">${esc(st.next.v)}</div></div>` : ""}</div>`;
+  }
+  const mine = S.filter(s => saved.has(s.id));
+  return `<section class="band">${ribbon}<div class="partners"><img src="img/logo-fptu.png" alt="FPT University"><i></i><img src="img/logo-eai.png" alt="EAI: European Alliance for Innovation"></div><h1 class="ht">FPT International Conference on Intelligent Systems &amp; Advanced Technologies</h1><p>25–26 November 2026 · FPT University, HCMC campus, Saigon Hi-Tech Park</p></section>
+  <main>${card}
+    <section class="intro" aria-label="About the conference">
+      <div class="ih"><div class="il"><img src="img/logo-fisat-color.png" alt=""></div><div><h2>About the conference</h2><div class="ik">EAI × FPT University</div></div></div>
+      <p class="lead">EAI FISAT 2026 is the first conference initiated by FPT University and the European Alliance for Innovation, held as FPT University celebrates its 20th anniversary.</p>
+      <p>This international forum brings together researchers, educators and practitioners from Viet Nam and abroad to exchange ideas across artificial intelligence, data science and advanced engineering, from machine learning and NLP to IoT, intelligent vehicles and semiconductors, and their impact on business, law and policy.</p>
+      <p>The program features two keynotes, two invited talks and 153 papers in 33 sessions.</p>
+      <div class="ipub"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M5 4h10l4 4v12H5z"/><path d="M15 4v4h4M8 13h8M8 17h5"/></svg><span>Proceedings appear in the <b>EAI/Springer Innovations in Communication and Computing</b> series, indexed in <b>Scopus</b>.</span></div>
+    </section>
+    <div class="sec"><h2>Presenting? Find your slot</h2>
+      <form class="find" id="findForm"><input type="search" id="findId" inputmode="numeric" placeholder="Paper ID, e.g. 366293" aria-label="Paper ID"><button class="btn">Find</button></form>
+      <div id="findOut"></div></div>
+    <div class="quick">
+      <a class="qk" href="#sessions"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="4" width="16" height="16" rx="3"/><path d="M8 9h8M8 13h8"/></svg>33 sessions<span class="muted small" style="font-weight:500">153 papers</span></a>
+      <a class="qk" href="#speakers"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c1.5-4 4.5-6 8-6s6.5 2 8 6"/></svg>Speakers<span class="muted small" style="font-weight:500">2 keynotes, 2 invited</span></a>
+      <a class="qk" href="#mine"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="m12 3.5 2.6 5.4 5.9.8-4.3 4.1 1 5.8L12 16.8l-5.2 2.8 1-5.8-4.3-4.1 5.9-.8z"/></svg>My schedule<span class="muted small" style="font-weight:500">${saved.size} saved</span></a>
+    </div>
+    ${mine.length ? `<div class="sec"><h2>Your sessions</h2><div class="list">${mine.map(s => sessionRow(s)).join("")}</div></div>` : ""}
+    <div class="sec"><h2>Need help?</h2><div class="card"><b>Conference Secretariat</b><div>Ms. Nguyen Hoang Thanh Thao</div>
+      <div class="small" style="margin-top:6px"><a href="tel:0354308705">0354 308 705</a> · <a href="mailto:thaonht2@fe.edu.vn">thaonht2@fe.edu.vn</a></div></div></div>
+  </main>`;
+}
+
+function vProgram() {
+  const st = nowState(), curSet = new Set(st.phase === "day" ? st.cur : []);
+  return `<section class="band">${ribbon}<h1>Program</h1><p>Thursday 26 November 2026 · main conference day</p></section>
+  <main><div class="sec" style="margin-top:18px"><ul class="prog">
+    <li><div class="tm">25 Nov<small>evening</small></div><div><div class="ti">Evening Welcome Reception</div><div class="muted small">Time and venue: ask the Conference Secretariat</div></div></li>
+    ${C.program.map(e => `<li class="k-${e.k}${curSet.has(e) ? " is-now" : ""}"><div class="tm">${esc(e.s)}<small>–${esc(e.e)}</small></div>
+      <div><a class="ti" href="${progItem(e)}" style="color:inherit;text-decoration:none">${esc(e.t)}</a>
+      ${e.who ? `<div class="small">${esc(e.who)}</div>` : ""}
+      <div class="m small" style="margin-top:5px;display:flex;gap:6px;flex-wrap:wrap;align-items:center">${e.href ? `<a class="tag" href="${esc(e.href)}" target="_blank" rel="noopener">${ICON.pin} ${esc(e.v)}</a>` : e.room && e.room !== "F3" ? `<a class="tag" href="#map-${e.room.toLowerCase()}">${ICON.pin} ${esc(e.v)}</a>` : `<span class="tag">${esc(e.v)}</span>`}${e.k === "keynote" ? '<span class="tag k">Plenary</span>' : ""}${e.block ? `<a class="tag k" href="#sessions-b${e.block}">See sessions</a>` : ""}</div></div></li>`).join("")}
+  </ul></div></main>`;
+}
+
+let filt = { block: "1", topics: new Set() };
+function vSessions() {
+  const inBlock = S.filter(s => filt.block === "mine" ? saved.has(s.id) : String(s.block) === filt.block);
+  const avail = C.topics.filter(t => inBlock.some(s => topicOf(s)?.k === t.k));
+  for (const k of [...filt.topics]) if (!avail.some(t => t.k === k)) filt.topics.delete(k);
+  const list = inBlock.filter(s => !filt.topics.size || filt.topics.has(topicOf(s)?.k));
+  const sub = filt.block === "1" ? "Block 1 · 10:45–12:00 · SS01–SS17" : filt.block === "2" ? "Block 2 · 15:15–17:15 · SS18–SS33" : "Sessions you starred";
+  return `<section class="band">${ribbon}<h1>Technical Sessions</h1><p>33 parallel sessions · 153 papers · 3rd floor rooms</p></section>
+  <main><div class="seg" role="group" aria-label="Block">
+    ${[["1", "Block 1 · AM"], ["2", "Block 2 · PM"], ["mine", "Starred"]].map(([k, n]) => `<button data-block="${k}" aria-pressed="${filt.block === k}">${n}</button>`).join("")}</div>
+    <div class="tags" role="group" aria-label="Filter by topic"><button class="tg" data-topic="" aria-pressed="${!filt.topics.size}">All</button>${avail.map(t => `<button class="tg" data-topic="${t.k}" aria-pressed="${filt.topics.has(t.k)}">${esc(t.n)}<span>${inBlock.filter(s => topicOf(s)?.k === t.k).length}</span></button>`).join("")}</div>
+    <div class="muted small" style="margin-top:6px">${sub} · ${list.length} shown</div>
+    <div class="list">${list.map(s => sessionRow(s)).join("") || `<div class="empty">${filt.block === "mine" ? "Tap the star on any session or paper to keep it here." : "No sessions in this topic for this block."}</div>`}</div>
+  </main>`;
+}
+
+function vSession(id, hit) {
+  const s = sById(id);
+  if (!s) return vNotFound();
+  const t = topicOf(s);
+  return `<section class="band">${ribbon}<a class="back" href="#sessions">${ICON.back}Sessions</a>
+    <h1 style="margin-top:6px"><span style="color:#7cc8ff">${esc(s.id)}</span> ${esc(s.title)}</h1>
+    <div class="meta">${roomLink(s.room)}<span class="pill">26 Nov · ${esc(timeLabel(s))}</span><span class="pill">${s.papers.length} papers</span>${t ? `<span class="pill">${esc(t.n)}</span>` : ""}</div>
+    <div class="chairs"><b>Session chair${s.chairs.length > 1 ? "s" : ""}</b><br>${s.chairs.map(esc).join("<br>")}</div></section>
+  <main><div class="sec" style="margin-top:14px;display:flex;justify-content:space-between;align-items:center;gap:8px"><h2 style="margin:0">Presentation order</h2>${starBtn(s.id, s.id)}</div>
+    <ul class="papers">${s.papers.map(p => `<li id="p${esc(p.id)}" class="${p.id === hit ? "hit" : ""}"><div class="n">${p.n}</div>
+      <div><div class="pid">#${esc(p.id)} ${p.late ? '<span class="tag late">Added after print</span>' : ""}</div><div class="pt">${esc(p.t)}</div><div class="pa">${esc(p.a)}</div></div>
+      ${starBtn("P" + p.id, "paper " + p.id)}</li>`).join("")}</ul>
+    <p class="note">Order follows the final agenda; it may differ from the printed brochure.</p>
+    ${(() => { const same = S.filter(x => x.room === s.room && x.id !== s.id); return same.length ? `<div class="sec"><h2>Also in Room ${esc(s.room)}</h2><div class="list">${same.map(x => sessionRow(x)).join("")}</div></div>` : ""; })()}
+  </main>`;
+}
+
+const avatar = (sp, cls = "av") => sp.img ? `<img class="${cls}" src="${esc(sp.img)}" alt="">` : `<div class="${cls}">${esc(sp.name.replace(/^(H\.E\.|Mr\.|Prof\.|Dr\.|Assoc\.)\s*/g, "").split(" ").filter(w => /^[A-Z]/.test(w)).slice(0, 2).map(w => w[0]).join(""))}</div>`;
+function vSpeakers() {
+  const grp = (h, arr) => `<div class="sec"><h2>${h}</h2>${arr.map(sp => `<a class="spk" href="#speaker-${sp.id}">${avatar(sp)}<div><div class="r">${esc(sp.role)} · ${esc(sp.when.split("·")[1] || "")}</div><div class="nm">${esc(sp.name)}</div><div class="tk">${esc(sp.talk || sp.aff)}</div></div></a>`).join("")}</div>`;
+  const sp = C.speakers;
+  return `<section class="band">${ribbon}<h1>Speakers</h1><p>All plenary talks are in Hall A</p></section>
+  <main>${grp("Keynote speakers", sp.filter(x => x.role.startsWith("Keynote")))}${grp("Invited speakers", sp.filter(x => x.role === "Invited talk"))}${grp("Opening ceremony", sp.filter(x => !x.talk))}</main>`;
+}
+function vSpeaker(id) {
+  const sp = C.speakers.find(x => x.id === id);
+  if (!sp) return vNotFound();
+  return `<section class="band">${ribbon}<a class="back" href="#speakers">${ICON.back}Speakers</a>
+    <div class="hero-sp">${avatar(sp)}<div><div style="color:#ffb48a;font-weight:700;font-size:14px">${esc(sp.role)}</div><h1 style="font-size:24px">${esc(sp.name)}</h1><p>${esc(sp.aff)}</p></div></div>
+    <div class="meta">${roomLink("Hall A")}<span class="pill">${esc(sp.when.replace(" · Hall A", ""))}</span></div></section>
+  <main>${sp.talk ? `<div class="talk">${esc(sp.talk)}</div>` : ""}
+    ${sp.abs ? `<div class="sec"><h2>Abstract</h2><div class="prose">${sp.abs.map(p => `<p>${esc(p)}</p>`).join("")}</div></div>` : ""}
+    ${sp.bio ? `<div class="sec"><h2>Biography</h2><div class="prose"><p>${esc(sp.bio)}</p></div></div>` : ""}</main>`;
+}
+
+let floor = "3";
+const placeKey = t => t ? t.toUpperCase() : "";
+function vMap(target, keepFloor) {
+  const P = C.places, key = placeKey(target);
+  const place = P[key];
+  if (place && !keepFloor) floor = place.f;
+  const f = C.floors.find(x => x.k === floor);
+  const pins = [];
+  if (place) { if (place.f === floor) pins.push(place); if (place.also && place.also.f === floor) pins.push(place.also); }
+  const title = place ? (place.n || "Room " + key) : "Campus map";
+  const usedBy = place && /^\d/.test(key) ? S.filter(s => s.room === key) : [];
+  return `<section class="band">${ribbon}<h1>${esc(title)}</h1><p>${place ? esc(place.note || "3rd floor · technical session room") : "FPT University HCMC · Lot E2a-7, D1 Street, Saigon Hi-Tech Park"}</p></section>
+  <main><div class="floors" role="group" aria-label="Floor">${C.floors.map(x => `<button class="chip" data-floor="${x.k}" aria-pressed="${x.k === floor}">${x.n}</button>`).join("")}</div>
+    <div class="mapscroll" id="mapscroll"><div class="mapbox" style="aspect-ratio:${f.ratio}"><img src="${f.img}" alt="${esc(f.n)} floor plan">${pins.map(p => `<span class="pin" data-x="${p.x}" style="left:${p.x}%;top:${p.y}%"></span>`).join("")}</div></div><p class="note" style="margin-top:6px">Swipe the plan sideways to see the whole floor.</p>
+    ${place && place.also ? `<p class="note">Shown on the ${place.f === "4" ? "4th" : place.f} and 5th floor plans; switch floors above.</p>` : ""}
+    ${usedBy.length ? `<div class="sec"><h2>Sessions in Room ${esc(key)}</h2><div class="list">${usedBy.map(s => sessionRow(s)).join("")}</div></div>` : ""}
+    <div class="sec"><h2>Find a room</h2><div class="roomgrid">
+      ${[["REG", "Check-in"], ["HALLA", "Hall A"], ["HALLB", "Hall B"], ["COFFEE", "Coffee"], ["LUNCH", "Lunch"]].map(([k, n]) => `<a class="chip" style="display:grid;place-items:center;text-decoration:none;font-size:13px" href="#map-${k.toLowerCase()}" aria-pressed="${k === key}">${n}</a>`).join("")}
+      ${Object.keys(P).filter(k => /^\d/.test(k)).sort().map(k => `<a class="chip" style="display:grid;place-items:center;text-decoration:none" href="#map-${k}" aria-pressed="${k === key}">${k}</a>`).join("")}</div></div>
+    <div class="sec"><h2>Getting here</h2><div class="card"><b>FPT University, Ho Chi Minh City Campus</b><div class="small">Lot E2a-7, D1 Street, Saigon Hi-Tech Park, Ho Chi Minh City</div>
+      <div class="small muted" style="margin-top:6px">Cars: Gate 1 (conference entrance) · Motorbikes: Gate 2</div>
+      <div style="margin-top:12px"><a class="btn" href="https://maps.app.goo.gl/FyNQv1mnPYVbZTk88" target="_blank" rel="noopener">Open in Google Maps</a></div></div>
+      <div class="card" style="margin-top:10px"><b>Gala Dinner · Sesan Restaurant</b><div class="small">26 Nov · 18:00–20:30 · with Closing Ceremony and Group Photo</div><div class="small">Address: 14 Einstein, Thủ Đức, Ho Chi Minh City</div><div class="small muted">Transport: ask the Conference Secretariat.</div><div style="margin-top:12px"><a class="btn ghost" href="https://maps.app.goo.gl/Qg7ZKxcSqYVLc81L7" target="_blank" rel="noopener">Sesan on Google Maps</a></div></div>
+      <img class="venue" src="img/venue.jpg" alt="Photos of the FPT University HCMC campus"></div>
+  </main>`;
+}
+
+function vInfo() {
+  const people = arr => `<div class="ppl">${arr.map(([n, a]) => `<div><b>${esc(n)}</b><span>${esc(a)}</span></div>`).join("")}</div>`;
+  return `<section class="band">${ribbon}<h1>Information</h1><p>Practical details, the conference and the city</p></section>
+  <main><div class="sec about"><div class="logo"><img src="img/logo-fisat-color.png" alt="FISAT 2026 logo"></div><div><b style="font-family:Montserrat,sans-serif">EAI FISAT 2026</b><div class="small muted">International Conference on Intelligent Systems and Advanced Technologies · <span style="white-space:nowrap">25–26 Nov 2026</span> · organized by EAI and FPT University</div></div></div>
+  <div class="org" aria-label="Organized by"><div class="w"><img src="img/logo-fptu-color.png" alt="FPT University"></div><div class="w"><img src="img/logo-eai-color.png" alt="EAI: European Alliance for Innovation"></div></div>
+  <div class="sec"><h2>Participant information</h2><div class="card"><dl class="kv">
+    <dt>Registration</dt><dd>26 Nov · 07:30–08:30 · Lobby Area</dd>
+    <dt>Opening</dt><dd>08:45 · Hall A</dd>
+    <dt>Gala Dinner</dt><dd>18:00–20:30 · Sesan Restaurant<br>14 Einstein, Thủ Đức<br><a href="https://maps.app.goo.gl/Qg7ZKxcSqYVLc81L7" target="_blank" rel="noopener">Open in Google Maps</a></dd>
+    <dt>Secretariat</dt><dd>Ms. Nguyen Hoang Thanh Thao<br><a href="tel:0354308705">0354 308 705</a><br><a href="mailto:thaonht2@fe.edu.vn">thaonht2@fe.edu.vn</a></dd></dl></div>
+    <p class="note">Session details follow the final agenda. Where the printed brochure differs, this app is current.</p></div>
+  <div class="sec">
+    <details><summary>About EAI FISAT 2026</summary><div class="prose">
+      <p>The European Alliance for Innovation – FPT International Conference on Intelligent Systems and Advanced Technologies is jointly organized by EAI and FPT University, and is the first conference the two have initiated together, in the year FPT University celebrates its 20th anniversary.</p>
+      <p>Topics span artificial intelligence, data science and advanced engineering systems: machine learning, computer vision, NLP and multimodal AI, reinforcement learning, big data, IoT, embedded and real-time systems, intelligent vehicles and semiconductor technologies; applications in fintech, logistics and the digital economy; and law, governance and policy, including AI ethics, data protection, cybersecurity, intellectual property and digital regulation.</p>
+      <p><b>Proceedings.</b> Accepted and presented papers are published in the EAI/Springer Innovations in Communication and Computing book series (ISSN 2522-8609), indexed in Scopus.</p></div></details>
+    <details><summary>Welcome message</summary><div class="prose">
+      <p>On behalf of the Organizing Committee, welcome to EAI FISAT 2026, jointly organized by the European Alliance for Innovation and FPT University, at FPT University's Ho Chi Minh City Campus from 25 to 26 November 2026.</p>
+      <p>The conference is an international forum for researchers, educators and practitioners from Viet Nam and around the world to exchange ideas, present their research, and explore future collaboration in intelligent systems and advanced technologies. The program features keynotes by Assoc. Prof. Tran Hoang Nguyen on LLM inference as a networking problem and Prof. Hiroshi Ochi on wireless AI at the edge, and invited talks by Noreen Izza Arshad and Balachandran Manavalan.</p>
+      <p>Sincere thanks to our Honorary Chairs, Prof. Choong Seon Hong (Kyung Hee University) and Prof. Imrich Chlamtac (European Alliance for Innovation); to EAI for its partnership; to the Technical Program Committee and reviewers; to the Organizing Committee at FPT University; and most importantly to all authors. Welcome to Ho Chi Minh City. I hope these two days bring valuable exchanges and connections that continue well beyond the conference.</p>
+      <p><b>Tuan Tran N., PhD</b><br><span class="muted">Chairman, EAI FISAT 2026 · FPT University, Viet Nam</span></p></div></details>
+    <details><summary>Committees</summary><div>${C.committees.map(c => `<h3 style="font-size:15px;color:var(--org);margin:14px 0 8px">${esc(c.h)}</h3>${people(c.p)}`).join("")}</div></details>
+  </div>
+  <div class="sec"><h2>Explore Ho Chi Minh City</h2>
+    ${C.city.map(g => `<details><summary>${esc(g.h)}</summary><div>${g.items.map(([n, d]) => `<div class="place"><b>${esc(n)}</b><p>${esc(d)}</p></div>`).join("")}</div></details>`).join("")}
+    <details><summary>A half-day walking route</summary><div><ol class="route">${C.walk.map(w => `<li>${esc(w)}</li>`).join("")}</ol></div></details>
+    <details><summary>Practical tips</summary><div>${C.tips.map(([n, d]) => `<div class="place"><b>${esc(n)}</b><p>${esc(d)}</p></div>`).join("")}</div></details>
+  </div></main>`;
+}
+
+function vMine() {
+  const ss = S.filter(s => saved.has(s.id));
+  const ps = S.flatMap(s => s.papers.filter(p => saved.has("P" + p.id)).map(p => ({ s, p })));
+  return `<section class="band">${ribbon}<h1>My schedule</h1><p>Saved on this device only</p></section>
+  <main>${!ss.length && !ps.length ? `<div class="empty">Nothing saved yet. Tap the star on any session or paper.</div>` : ""}
+    ${ss.length ? `<div class="sec"><h2>Sessions</h2><div class="list">${ss.map(s => sessionRow(s)).join("")}</div></div>` : ""}
+    ${ps.length ? `<div class="sec"><h2>Papers</h2><div class="list">${ps.map(({ s, p }) => `<div class="row" role="link" tabindex="0" data-go="#paper-${p.id}"><div class="id">${esc(s.id)}</div><div><div class="t">${esc(p.t)}</div><div class="m"><span class="room">${ICON.pin}${esc(s.room)}</span><span>${esc(timeLabel(s))} · talk ${p.n} of ${s.papers.length}</span></div></div>${starBtn("P" + p.id, "paper " + p.id)}</div>`).join("")}</div></div>` : ""}</main>`;
+}
+
+function centerPin() {
+  const sc = document.getElementById("mapscroll"), pin = sc && sc.querySelector(".pin");
+  if (!sc) return;
+  const box = sc.firstElementChild;
+  sc.style.scrollBehavior = "auto";
+  sc.scrollLeft = pin ? Math.max(0, box.clientWidth * pin.dataset.x / 100 - sc.clientWidth / 2) : 0;
+  sc.style.scrollBehavior = "";
+}
+function vNotFound() { return `<main><div class="empty">Page not found. <a href="#home">Go home</a></div></main>`; }
+
+/* ---------- search ---------- */
+const norm = s => String(s).normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/đ/gi, "d").toLowerCase();
+const hl = (txt, q) => { if (!q) return esc(txt); const n = norm(txt), i = n.indexOf(q); return i < 0 ? esc(txt) : esc(txt.slice(0, i)) + "<mark>" + esc(txt.slice(i, i + q.length)) + "</mark>" + esc(txt.slice(i + q.length)); };
+function searchAll(raw) {
+  const q = norm(raw.trim().replace(/^#/, ""));
+  if (q.length < 2) return "";
+  const papers = [], sess = [], spk = [];
+  for (const s of S) {
+    if (norm(s.id + " " + s.title + " room " + s.room + " " + s.chairs.join(" ")).includes(q)) sess.push(s);
+    for (const p of s.papers) if (norm(p.id + " " + p.t + " " + p.a).includes(q)) papers.push({ s, p });
+  }
+  for (const sp of C.speakers) if (norm(sp.name + " " + (sp.talk || "") + " " + sp.aff).includes(q)) spk.push(sp);
+  if (!papers.length && !sess.length && !spk.length) return `<div class="empty">No match for “${esc(raw)}”. Try a paper ID, an author's family name, or a room number.</div>`;
+  return (spk.length ? `<div class="res-h">Speakers</div>${spk.map(sp => `<a class="spk" href="#speaker-${sp.id}">${avatar(sp)}<div><div class="r">${esc(sp.role)}</div><div class="nm">${hl(sp.name, q)}</div><div class="tk">${esc(sp.when)}</div></div></a>`).join("")}` : "") +
+    (sess.length ? `<div class="res-h">Sessions (${sess.length})</div><div class="list">${sess.slice(0, 12).map(s => sessionRow(s)).join("")}</div>` : "") +
+    (papers.length ? `<div class="res-h">Papers (${papers.length})</div><div class="list">${papers.slice(0, 40).map(({ s, p }) => `<div class="row" role="link" tabindex="0" data-go="#paper-${p.id}"><div class="id">${esc(s.id)}</div><div><div class="t">${hl(p.t, q)}</div><div class="m">${hl(p.a, q)}</div><div class="m"><span class="room">${ICON.pin}${esc(s.room)}</span><span>${esc(timeLabel(s))} · #${hl(p.id, q)} · talk ${p.n}/${s.papers.length}</span></div></div>${starBtn("P" + p.id, "paper " + p.id)}</div>`).join("")}</div>` : "");
+}
+let lastQ = "";
+function vSearch() {
+  return `<section class="band" style="padding-bottom:18px"><h1 style="font-size:24px">Search</h1>
+    <input type="search" id="q" placeholder="Paper ID, title, author, room, speaker" aria-label="Search" style="margin-top:12px;border-color:transparent" value="${esc(lastQ)}"></section>
+  <main id="results">${searchAll(lastQ) || `<div class="empty">Search all 153 papers, 33 sessions and speakers.<br>Vietnamese names work with or without accents.</div>`}</main>`;
+}
+
+/* ---------- router ---------- */
+const view = $("#view");
+function route() {
+  const h = (location.hash || "#home").slice(1).toLowerCase();
+  let m, tab = "home", html;
+  if (h === "home" || h === "") html = vHome();
+  else if (h === "program") { tab = "program"; html = vProgram(); }
+  else if ((m = h.match(/^sessions(?:-b([12]))?$/))) { tab = "sessions"; if (m[1]) filt.block = m[1], filt.topics.clear(); html = vSessions(); }
+  else if ((m = h.match(/^session-(ss\d+)$/))) { tab = "sessions"; html = vSession(m[1]); }
+  else if ((m = h.match(/^paper-(\d+)$/))) { tab = "sessions"; const s = S.find(x => x.papers.some(p => p.id === m[1])); html = s ? vSession(s.id, m[1]) : vNotFound(); }
+  else if (h === "speakers") { tab = "program"; html = vSpeakers(); }
+  else if ((m = h.match(/^speaker-([a-z]+)$/))) { tab = "program"; html = vSpeaker(m[1]); }
+  else if ((m = h.match(/^map(?:-([a-z0-9]+))?$/))) { tab = "map"; html = vMap(m[1]); }
+  else if (h === "info") { tab = "info"; html = vInfo(); }
+  else if (h === "mine") { tab = "sessions"; html = vMine(); }
+  else if (h === "search") { tab = ""; html = vSearch(); }
+  else html = vNotFound();
+  view.innerHTML = html;
+  document.querySelectorAll(".tab").forEach(t => t.dataset.t === tab ? t.setAttribute("aria-current", "page") : t.removeAttribute("aria-current"));
+  const hit = h.startsWith("paper-") && document.getElementById("p" + h.slice(6));
+  if (hit) hit.scrollIntoView({ block: "center" }); else window.scrollTo(0, 0);
+  centerPin();
+  if (h === "search") { const q = $("#q"); q.focus(); }
+}
+window.addEventListener("hashchange", route);
+
+/* ---------- events ---------- */
+document.addEventListener("click", e => {
+  const st = e.target.closest("[data-star]");
+  if (st) { e.preventDefault(); e.stopPropagation(); const k = st.dataset.star; saved.has(k) ? saved.delete(k) : saved.add(k); persist(); document.querySelectorAll(`[data-star="${CSS.escape(k)}"]`).forEach(b => b.setAttribute("aria-pressed", saved.has(k))); return; }
+  const b = e.target.closest("[data-block]"); if (b) { filt.block = b.dataset.block; filt.topics.clear(); view.innerHTML = vSessions(); return; }
+  const tg = e.target.closest("[data-topic]"); if (tg) { const k = tg.dataset.topic; if (!k) filt.topics.clear(); else filt.topics.has(k) ? filt.topics.delete(k) : filt.topics.add(k); const y = scrollY; view.innerHTML = vSessions(); scrollTo(0, y); const f = view.querySelector(`[data-topic="${k}"]`); if (f) f.focus({ preventScroll: true }); return; }
+  const f = e.target.closest("[data-floor]"); if (f) { floor = f.dataset.floor; view.innerHTML = vMap((location.hash.match(/^#map-(.+)$/) || [])[1], true); centerPin(); return; }
+  const g = e.target.closest("[data-go]"); if (g && !e.target.closest("a")) location.hash = g.dataset.go;
+});
+document.addEventListener("keydown", e => { if (e.key === "Enter") { const g = e.target.closest && e.target.closest("[data-go]"); if (g) location.hash = g.dataset.go; } });
+document.addEventListener("input", e => { if (e.target.id === "q") { lastQ = e.target.value; $("#results").innerHTML = searchAll(lastQ) || ""; } });
+document.addEventListener("submit", e => {
+  if (e.target.id !== "findForm") return;
+  e.preventDefault();
+  const v = $("#findId").value.trim().replace(/^#/, ""), out = $("#findOut");
+  const s = S.find(x => x.papers.some(p => p.id === v));
+  if (!s) { out.innerHTML = `<p class="note">No paper with ID “${esc(v)}”. IDs have six digits, e.g. 366293. Or <a href="#search">search by title or author</a>.</p>`; return; }
+  const p = s.papers.find(x => x.id === v);
+  out.innerHTML = `<div class="card" style="margin-top:10px"><div class="lbl" style="font-weight:700;color:var(--org);font-size:13px">Your slot</div>
+    <div style="font:700 18px/1.25 Montserrat,sans-serif;margin:4px 0">${esc(s.id)} · Room ${esc(s.room)} · ${esc(timeLabel(s))}</div>
+    <div class="small">Talk <b>${p.n} of ${s.papers.length}</b> · Chair: ${esc(s.chairs.map(chairName).join(", "))}</div>
+    <div class="small muted" style="margin-top:4px">${esc(p.t)}</div>
+    <div style="display:flex;gap:8px;margin-top:12px;flex-wrap:wrap"><a class="btn" href="#paper-${esc(p.id)}">Open session</a><a class="btn ghost" href="#map-${esc(s.room)}">Show room on map</a></div></div>`;
+});
+$("#btnSearch").addEventListener("click", () => { location.hash = "#search"; });
+route();
+setInterval(() => { const h = location.hash || "#home"; if (h === "#home" || h === "#program") { const y = scrollY; route(); scrollTo(0, y); } }, 60000);
+}
+</script>
+</body>
+</html>
